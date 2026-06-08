@@ -12,8 +12,23 @@ eliza = Person("Eliza", 34, "Arch Linux")
 print(eliza.name)
 print(eliza.address)
 
+def is_adult(person: Person) -> bool:
+    return person.age >= 18
+
+print(is_adult(imran))
+
+def get_id(person: Person) -> int:
+    return person.id
 # Exercise
 # Save the above code to a file, and run it through mypy.
 # Read the error, and make sure you understand what it’s telling you.
-# "Person" has no attribute "address". both instances of "Person", and they dont have address att.
+# Answer : "Person" has no attribute "address". both instances of "Person", and they dont have address att.
 
+# Exercise
+# Add the is_adult code to the file you saved earlier.
+# Run it through mypy - notice that no errors are reported - mypy understands that Person has a property named age so is happy with the function.
+# Write a new function in the file that accepts a Person as a parameter and
+#  tries to access a property that doesn’t exist.
+#  Run it through mypy and check that it does report an error.
+
+# Answer : "Person" has no attribute "id". 
