@@ -1,24 +1,19 @@
-import sys
+import argparse
 import os
 
-args = sys.argv[1:]
+parser = argparse.ArgumentParser()
+parser.add_argument("-a", "--all", action="store_true")
+parser.add_argument("-1", dest="one_per_line", action="store_true")
+parser.add_argument("path", nargs="?", default=".")
 
-show_all = False
-one_per_line = False
-path = "."
+args = parser.parse_args()
 
-for arg in args:
-    if arg == "-a":
-        show_all = True
-    elif arg == "-1":
-        one_per_line = True
-    else:
-        path = arg
+files = sorted(os.listdir(args.path))
 
-files = sorted(os.listdir(path))
+files = [f for f in files if args.all or not f.startswith(".")]
 
-for file in files:
-    if not show_all and file.startswith("."):
-        continue
-
-    print(file)
+if args.one_per_line:
+    for f in files:
+        print(f)
+else:
+    print(" ".join(files))
