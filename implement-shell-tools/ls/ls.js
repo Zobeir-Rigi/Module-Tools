@@ -1,32 +1,28 @@
-import process from "node:process";
+import { program } from "commander";
 import { promises as fs } from "node:fs";
 
-const args = process.argv.slice(2);
+program
+  .name("ls")
+  .description("List directory contents")
+  .option("-a, --all", "show hidden files")
+  .option("-1, --one-per-line", "display one file per line")
+  .argument("[path]", "directory to list", ".");
 
-let showAll = false;
-let path = ".";
+program.parse();
 
-
-for (const arg of args) {
-  if (arg === "-a") {
-    showAll = true;
-  } else if (arg === "-1") {
-    // do nothing: already printing one file per line
-    path = arg;
-  }
-}
-
+const options = program.opts();
+const path = program.args[0] || ".";
 
 const files = await fs.readdir(path);
 
-for (const file of files) {
+const filteredFiles = files.filter((file) => {
+  return options.all || !file.startsWith(".");
+});
 
-  if (!showAll && file.startsWith(".")) {
-    continue;
+if (options.onePerLine) {
+  for (const file of filteredFiles) {
+    console.log(file);
   }
-
-  console.log(file);
+} else {
+  console.log(filteredFiles.join(" "));
 }
-
-// We already print one file per line because 
-// console.log(file) automatically puts each file on its own line.
