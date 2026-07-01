@@ -52,20 +52,32 @@ def most_available_os() -> OperatingSystem:
 
 
 # Main program
-try:
-    name = input("Enter your name: ").strip()
 
-    age_input = input("Enter your age: ").strip()
-    age = int(age_input)
-    if age < 0:
-        raise ValueError("Age must be a positive number")
+name = input("Enter your name: ").strip()
 
-    os_input = input("Enter OS (macOS, Arch Linux, Ubuntu): ").strip()
-    preferred_os = parse_os(os_input)
+age = None
+preferred_os = None
 
-except ValueError as e:
-    print(f"Error: {e}", file=sys.stderr)
-    sys.exit(1)
+while age is None or preferred_os is None:
+    try:
+        if age is None:
+            age_input = input("Enter your age: ").strip()
+            age = int(age_input)
+            if age < 0:
+                raise ValueError("Age must be a positive number")
+
+        if preferred_os is None:
+            os_input = input("Enter OS (macOS, Arch Linux, Ubuntu): ").strip()
+            preferred_os = parse_os(os_input)
+
+    except ValueError as e:
+        print(f"Error: {e}. Please try again.\n")
+
+        # Reset only the field that failed
+        if "Age" in str(e) or "positive number" in str(e):
+            age = None
+        elif "Invalid operating system" in str(e):
+            preferred_os = None
 
 
 person = Person(name, age, preferred_os)
